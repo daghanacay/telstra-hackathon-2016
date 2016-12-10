@@ -19,7 +19,10 @@ JPM-Command:			hack
 	web=web
 
 -buildpath: \
-	osgi.enroute.base.api
+	osgi.enroute.base.api,\
+	org.apache.httpcomponents.httpclient,\
+	com.easyiot.LT100H.device.api,\
+	com.easyiot.base.api
 	
 -testpath: \
 	osgi.enroute.junit.wrapper;version=4.12

@@ -1,3 +1,29 @@
 #
 # This file is left open for you to define your macros
 #
+#
+# This file is left open for you to define your macros
+#
+-plugin.2.easyiot.core = \
+	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
+		snapshotUrls=https://oss.sonatype.org/content/groups/osgi; \
+		releaseUrls=https://repo1.maven.org/maven2/; \
+		pom=${build}/EasyCoreMaven.xml; \
+		name=EasyCoreMaven; \
+		location=${build}/cache/EasyCoreMaven.xml
+		
+-plugin.2.easyiot.protocol = \
+	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
+		snapshotUrls=https://oss.sonatype.org/content/groups/osgi; \
+		releaseUrls=https://repo1.maven.org/maven2/; \
+		pom=${build}/EasyProtocolImplMaven.xml; \
+		name=EasyProtocolImplMaven; \
+		location=${build}/cache/EasyProtocolImplMaven.xml
+
+-plugin.2.easyiot.device = \
+	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
+		snapshotUrls=https://oss.sonatype.org/content/groups/osgi; \
+		releaseUrls=https://repo1.maven.org/maven2/; \
+		pom=${build}/EasyDeviceMaven.xml; \
+		name=EasyDeviceMaven; \
+		location=${build}/cache/EasyDeviceMaven.xml
