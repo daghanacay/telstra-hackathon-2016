@@ -1,6 +1,5 @@
 package com.telstra.hack.application;
 
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,6 +7,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.osgi.dto.DTO;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
 import osgi.enroute.configurer.api.RequireConfigurerExtender;
@@ -16,7 +20,6 @@ import osgi.enroute.rest.api.REST;
 import osgi.enroute.rest.api.RESTRequest;
 import osgi.enroute.twitter.bootstrap.capabilities.RequireBootstrapWebResource;
 import osgi.enroute.webserver.capabilities.RequireWebServerExtender;
-import org.osgi.dto.DTO;
 
 @RequireAngularWebResource(resource = { "angular.js", "angular-resource.js", "angular-route.js" }, priority = 1000)
 @RequireBootstrapWebResource(resource = "css/bootstrap.css")
@@ -27,6 +30,18 @@ public class HackApplication implements REST {
 
 	private final Map<String, List<LocationDataTime>> m_history = new ConcurrentHashMap<>();
 
+	@Activate
+	public void setUp(){
+		postTestData("10.788037247049667", "106.59048386984685", "2016-12-07T15:41:35.412Z");
+		postTestData("10.89422964626165", "106.1795883479868", "2016-12-06T19:41:35.412Z");
+		postTestData("10.614101128457742", "105.92195711504108", "2016-12-05T23:41:35.412Z");
+		postTestData("10.358069865773288", "105.46792962756278", "2016-12-05T03:41:35.412Z");
+		postTestData("10.584736614037618", "105.78181966390942", "2016-12-04T07:41:35.412Z");
+		postTestData("10.29651382767102", "105.73727286453364", "2016-12-03T11:41:35.412Z");
+		postTestData("10.709797114802402", "105.33215562691426", "2016-12-02T15:41:35.412Z");
+		postTestData("11.151025342183182", "106.36867638314023", "2016-12-08T11:41:35.412Z");// LAST known location
+	}
+	
 	// Model used to get/put data from backend
 	public static class LocationDataTime extends DTO {
 		public String lat;
@@ -60,7 +75,8 @@ public class HackApplication implements REST {
 	// GET http://localhost:8080/rest/location/xavier ==> returns
 	// [{"lat":"10","long":"10", "time":
 	// "2016-12-10T12:53:12.727+11:00[Australia/Melbourne]"},...] for xavier
-	public List<LocationDataTime> getLocation(String name) {
+	public List<LocationDataTime> getLocation(RESTRequest request,String name) {
+		request._response().addHeader("Access-Control-Allow-Origin", "*");
 		return m_history.get(name);
 	}
 
@@ -82,8 +98,9 @@ public class HackApplication implements REST {
 	// {"lat":"10","long":"10", "time":
 	// "2016-12-10T12:53:12.727+11:00[Australia/Melbourne]",
 	// "relevantcontacts":[{"name":"ambulance", "number":"1111111"}]} for xavier
-	public LastLocationDataTime getLastLocation(String name) {
+	public LastLocationDataTime getLastLocation(RESTRequest request,String name) {
 		LastLocationDataTime returnVal= null;
+		request._response().addHeader("Access-Control-Allow-Origin", "*");
 		Optional<LocationDataTime> lastLoc = m_history.get(name).stream().reduce((first, second) -> second);
 		if (lastLoc.isPresent()) {
 			LocationDataTime lastLocData = lastLoc.get();
@@ -103,4 +120,38 @@ public class HackApplication implements REST {
 		detail.number = "111111";
 		return Arrays.asList(detail);
 	}
+	
+	private void postTestData(String lat,String lon, String time) {
+		LocationPostRequest request = new LocationPostRequest() {
+			
+			@Override
+			public HttpServletResponse _response() {
+				return null;
+			}
+			
+			@Override
+			public HttpServletRequest _request() {
+				return null;
+			}
+			
+			@Override
+			public String _host() {
+				return null;
+			}
+			
+			@Override
+			public LocationDataTime _body() {
+				LocationDataTime temp = new LocationDataTime();
+				temp.lat = lat;
+				temp.lon = lon;
+				temp.time = time;
+				return temp;
+			}
+		};
+		
+		postLocation(request, "test");
+	}
+	
+	
+	
 }
