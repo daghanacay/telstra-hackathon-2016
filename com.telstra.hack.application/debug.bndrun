@@ -1,0 +1,12 @@
+#
+# HACK APPLICATION DEBUG RUN SPECIFICATION
+#
+
+-include: ~com.telstra.hack.bndrun
+
+-runrequires.debug:  ${debug-bundles}
+
+-runtrace: true
+
+-runbundles: \
+	${error;Resolve first}

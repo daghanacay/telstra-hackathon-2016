@@ -1,0 +1,25 @@
+#
+#  APPLICATION
+#
+
+Bundle-Version: 1.0.0.${tstamp}
+Bundle-Description: \
+	Telstra hack application.
+
+Private-Package:  \
+	com.telstra.hack.application
+
+EnRoute-Application: 	com.telstra.hack
+JPM-Command:			hack
+
+-includeresource: \
+	{readme.md}, \
+	{configuration=configuration}, \
+	{static=static}, \
+	web=web
+
+-buildpath: \
+	osgi.enroute.base.api
+	
+-testpath: \
+	osgi.enroute.junit.wrapper;version=4.12
