@@ -32,7 +32,7 @@ public class DeviceService {
 	@Activate
 	public void updateDeviceData() throws Exception {
 		// update every ten second
-		scheduler.schedule(() -> getDeviceData(), 10000);
+		scheduler.schedule(() -> getDeviceData(), 60000);
 	}
 
 	public void getDeviceData() {
@@ -41,7 +41,7 @@ public class DeviceService {
 					LT100HSensorDataDTO.class, DeviceExecutorMethodTypeEnum.GET);
 
 			AppSensorDataDTO data = converter.convert(lt100hSensors.get(0).getId(), lt100hSensorData);
-			hackApp.postTestData("jenny", String.valueOf(data.latitude), String.valueOf(data.longitude),
+			hackApp.postTestData("JOHN_satellite", String.valueOf(data.latitude), String.valueOf(data.longitude),
 					"2016-12-04T07:41:35.412Z");
 		} catch (NoSuchDeviceException e) {
 			// TODO Auto-generated catch block

@@ -1,12 +1,12 @@
 package com.telstra.hack.application;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +15,6 @@ import org.apache.http.client.fluent.Request;
 import org.osgi.dto.DTO;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 import osgi.enroute.configurer.api.RequireConfigurerExtender;
 import osgi.enroute.google.angular.capabilities.RequireAngularWebResource;
@@ -98,10 +97,11 @@ public class HackApplication implements REST {
 		LocationDataTime dateTimeLocation = rr._body();
 
 		if (m_history.get(name) == null) {
-			m_history.put(name, new ArrayList<LocationDataTime>());
+			m_history.put(name, new CopyOnWriteArrayList<LocationDataTime>());
 		}
 		m_history.get(name).add(dateTimeLocation);
-		StringBuilder st = new StringBuilder("Post an entry using payload: \n")
+		StringBuilder st = new StringBuilder(name.toUpperCase() +
+				 " has sent location: \n")
 				.append("Lat: " + dateTimeLocation.lat + "\n").append("Lon: " + dateTimeLocation.lon + "\n")
 				.append("time: " + dateTimeLocation.time + "\n");
 		System.out.println(st.toString());
